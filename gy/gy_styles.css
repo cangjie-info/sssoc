@@ -1,0 +1,35 @@
+body {
+    background-color: black;
+}
+
+em {
+    color: lightyellow;
+    font-style: normal;
+}
+
+h1, h2, p {
+    font-family: sans-serif;
+}
+
+p {
+    font-size: large;
+}
+
+img {
+    width: 100%;
+}
+
+h1 > span, h2 > span {
+    background-color: darkslategray;
+}
+
+.button {
+    display: inline;
+}
+
+p > span {
+    padding: 3px;
+    margin: 0px;
+    border-width: 1px;
+    background-color: darkgreen;
+}
