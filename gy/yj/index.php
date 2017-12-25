@@ -34,30 +34,30 @@ catch (Exception $ex) {
 $result = $s->fetchAll(PDO::FETCH_ASSOC);
 $yj_array = array_fill(0, 16, array_fill(0, 24, array_fill(0, 2, '')));
 foreach($result as $niu) {
-    $col = 24 - $niu['yj_initial_id'];
-    $row = $niu['deng'] - 1;
-    $row += ($niu['tone'] - 1) * 4;
+    $col = 24 - $niu['yj_initial_id']; // initial uniquely determines column
+    $row = $niu['deng'] - 1;    // table row is basically determined by the deng of the final
+    $row += ($niu['tone'] - 1) * 4; // move to right tone 
     $deng = $niu['deng'];
     $yj_initial_id = $niu['yj_initial_id'];
     $initial = $niu['initial'];
-    if($niu['yj_qu_as_ru'] == 1) {
-        $row += 4;
+    if($niu['yj_qu_as_ru'] == 1) {  
+        $row += 4; // some qusheng finals are placed like rusheng
     }
     if($deng==3) {
         if($niu['chongniu'] == 4 && 
                 ( ($yj_initial_id <= 4 && $yj_initial_id >= 1) ||
                   ($yj_initial_id <= 12 && $yj_initial_id >= 9) ||
                   ($yj_initial_id <= 21 && $yj_initial_id >= 18) ) ) {
-            $row++;
+            $row++; //chongniu final with grave initial bump down to row 4
         }
         else if($initial >= 19 && $initial <= 23) {
-            $row--;
+            $row--; // tsr- etc. bump up to row 2
         }
         else if($initial >=14 && $initial <=18) {
-            $row++;
+            $row++; // ts- etc. bump down to row 4
         }
         else if($initial == 38) {
-            $row++;
+            $row++; // 喻四
         }
     }
     $yj_array[$row][$col][0] .= $niu['graph'];
