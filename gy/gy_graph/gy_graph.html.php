@@ -28,6 +28,7 @@
                 $hu = $row['hu'];
                 $deng = $row['deng'];
                 $final_ipa_pan = $row['final_ipa_pan'];
+                $rhyme_name = $row['rhyme_name'];
                 include 'output_form.html.php';
             }
         ?>

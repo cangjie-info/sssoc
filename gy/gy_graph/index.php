@@ -40,12 +40,35 @@ try {
     $s->execute();
 } 
 catch (Exception $ex) {
-    $error = "Error finding GY data by id: " .$ex->getMessage();
+    $error = "Error finding GY data by graph: " .$ex->getMessage();
     include $includes . 'error.html.php';
     exit();
 }
-
 $result = $s->fetchAll(PDO::FETCH_ASSOC);
+
+$row_number = 0;
+foreach($result as $row) {
+    $sql = "SELECT rhyme_name "
+            . "FROM gy_rhymes "
+            . "WHERE page < :page OR (page = :page AND number <= :number) "
+            . "ORDER BY page DESC, number DESC "
+            . "LIMIT 1;";
+    try {
+        $s = $pdo->prepare($sql);
+        $s->bindvalue("page", $row['page']);
+        $s->bindvalue("number", $row['number']);
+        $s->execute();
+    }
+    catch (Exception $ex) {
+        $error = "Error finding rhyme by page and number" . $ex->getMessage();
+        include $includes . 'error.html.php';
+        exit();
+    }
+    $rhyme_result = $s->fetch();
+    $result[$row_number]['rhyme_name'] = $rhyme_result['rhyme_name'];
+    $row_number++;
+}
+
 
 include 'gy_graph.html.php';
 

@@ -27,9 +27,31 @@ h1 > span, h2 > span {
     display: inline;
 }
 
-p > span {
-    padding: 3px;
-    margin: 0px;
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-color: white;
+    border-style: solid;
+    float: left;
+}
+
+div.image {
+    height: 200px;
+    overflow: auto;
+}
+
+img {
+}
+
+tr {
+}
+
+td {
+    width: 2%;
+    height: 20px;
+    color: white;
+    border-color: white;
+    border-style: solid;
     border-width: 1px;
-    background-color: darkgreen;
+    
 }
