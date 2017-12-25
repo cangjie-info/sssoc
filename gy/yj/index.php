@@ -1,4 +1,4 @@
-<?php
+<?php   
 
 $page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING);
 if($page == NULL) {
@@ -54,6 +54,9 @@ foreach($result as $niu) {
             $row--;
         }
         else if($initial >=14 && $initial <=18) {
+            $row++;
+        }
+        else if($initial == 38) {
             $row++;
         }
     }
