@@ -27,6 +27,12 @@ h1 > span, h2 > span {
     display: inline;
 }
 
+p > span {
+    background-color: darkgreen;
+    padding: 3px;
+    border: 3px;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
