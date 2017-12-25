@@ -2,12 +2,21 @@ body {
     background-color: black;
 }
 
+label {
+    color: lightyellow;
+}
+
+a {
+    color: lightgoldenrodyellow;
+    text-decoration: none;
+}
+
 em {
     color: lightyellow;
     font-style: normal;
 }
 
-h1, h2, p {
+h1, h2, p, label {
     font-family: sans-serif;
 }
 

@@ -11,11 +11,16 @@
                 <input type="text" name="graph" id="graph" />
             <input  type="submit" value="Search" />
         </form>
-        <h1 class="head_graph"><span><?php echo($graph) ?></span></h1>
+        <?php if(count($result) == 0) {
+ exit(); } ?>
+        <h1 class="head_graph"><span><?php echo($result[0]['graph']) ?></span></h1>
         <?php 
             foreach($result as $row) {
                 $entry = $row['entry'];
+                $niu = $row['niu'];
+                $niu_id = $row['niuid'];
                 $page = $row['page'];
+                $yj_page = $row['yj_page'];
                 $img_file = page_img($page);
                 $number = $row['number'];
                 $fanqie_1 = $row['fanqie_1'];

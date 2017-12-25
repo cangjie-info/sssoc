@@ -19,24 +19,41 @@ function page_img($sbgy_page) {
     return 'sbgy/sbgy' . $page_str . '.jpg';
 }
 
-$graph = filter_input(INPUT_POST, 'graph', FILTER_SANITIZE_STRING);
+$search_graph = filter_input(INPUT_POST, 'graph', FILTER_SANITIZE_STRING);
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
 include '../../includes/all.php';
 include $includes . 'db_connect.php';
 
 $sql = "SELECT gy_entries.graph AS graph, "
+        . "gy_niu.graph AS niu, "
+        . "gy_niu.id AS niuid, "
         . "entry, page, number, "
+        . "gy_finals.yj_page, "
         . "fanqie_1, fanqie_2, tone, "
         . "initial_name, gy_initials.ipa_pan AS initial_ipa_pan, "
         . "she, hu, deng, gy_finals.ipa_pan AS final_ipa_pan "
         . "FROM gy_entries "
         . "INNER JOIN gy_niu ON niu_id = gy_niu.id "
         . "INNER JOIN  gy_initials ON initial_id = gy_initials.id "
-        . "INNER JOIN gy_finals ON final_id=gy_finals.id "
-        . "WHERE gy_entries.graph = :graph";
+        . "INNER JOIN gy_finals ON final_id=gy_finals.id ";
+
+if(is_null($id)) {
+    $sql .= "WHERE gy_entries.graph = :graph;";
+}
+else {
+    $sql .= "WHERE gy_entries.id = :id;";
+}
+
+        
 try {
     $s = $pdo->prepare($sql);
-    $s->bindvalue("graph", $graph);
+    if(is_null($id)) {
+        $s->bindvalue("graph", $search_graph);
+    }
+    else {
+        $s->bindvalue("id", $id);
+    }    
     $s->execute();
 } 
 catch (Exception $ex) {
@@ -68,8 +85,5 @@ foreach($result as $row) {
     $result[$row_number]['rhyme_name'] = $rhyme_result['rhyme_name'];
     $row_number++;
 }
-
-
 include 'gy_graph.html.php';
-
 ?>

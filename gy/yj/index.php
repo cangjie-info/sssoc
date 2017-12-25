@@ -15,7 +15,8 @@ include '../../includes/all.php';
 include $includes . 'db_connect.php';
 
 $sql = "SELECT hu, deng, final_name, gy_initials.id AS initial, yj_qu_as_ru, chongniu, "
-        . "gy_niu.graph AS graph, gy_niu.tone, yj_initial_id "
+        . "gy_niu.graph AS graph, gy_niu.tone, yj_initial_id, "
+        . "gy_niu.id AS niuid "
         . "FROM gy_finals "
         . "JOIN gy_niu ON final_id = gy_finals.id "
         . "JOIN gy_initials ON initial_id = gy_initials.id "
@@ -31,7 +32,7 @@ catch (Exception $ex) {
     exit();
 }
 $result = $s->fetchAll(PDO::FETCH_ASSOC);
-$yj_array = array_fill(0, 16, array_fill(0, 24, ''));
+$yj_array = array_fill(0, 16, array_fill(0, 24, array_fill(0, 2, '')));
 foreach($result as $niu) {
     $col = 24 - $niu['yj_initial_id'];
     $row = $niu['deng'] - 1;
@@ -56,14 +57,17 @@ foreach($result as $niu) {
             $row++;
         }
     }
-    $yj_array[$row][$col] .= $niu['graph'];
-    $yj_array[$row][0] = $niu['final_name'] . $niu['hu'] . $deng;
+    $yj_array[$row][$col][0] .= $niu['graph'];
+    $yj_array[$row][$col][1] = $niu['niuid'];
+    $yj_array[$row][0][0] = $niu['final_name'] . $niu['hu'] . $deng;
 }
 $html_table = "<table>";
 for($r = 0; $r < 16; $r++) {
     $html_table .= '<tr>';
     for($c = 0; $c < 24; $c++) {
-        $html_table .= '<td>' . $yj_array[$r][$c] . '</td>';
+        $html_table .= '<td><a href="../gy_niu/?id=' . $yj_array[$r][$c][1] 
+                . '">'
+                . $yj_array[$r][$c][0] . '</a></td>';
     }
     $html_table .= '</tr>';
 }
