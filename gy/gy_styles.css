@@ -1,5 +1,6 @@
 body {
     background-color: black;
+    font-family: sans-serif;
 }
 
 label {
@@ -14,10 +15,6 @@ a {
 em {
     color: lightyellow;
     font-style: normal;
-}
-
-h1, h2, p, label {
-    font-family: sans-serif;
 }
 
 p {
@@ -45,8 +42,8 @@ p > span {
 table {
     width: 100%;
     border-collapse: collapse;
-    border-color: white;
     border-style: solid;
+    border-color: white;
     float: left;
 }
 
@@ -58,15 +55,37 @@ div.image {
 img {
 }
 
-tr {
+
+tr:nth-child(4n+2) {
+    border-style: none none solid;
+    border-bottom-color: white;
+}
+
+th {
+    border-style: solid;
+    border-color: white;
+    border-width: 3px;
+    color: white;
+    font-size: large;
+    background-color: #000060;
+}
+
+th:last-child {
+    width: 1%;
 }
 
 td {
     width: 2%;
-    height: 20px;
+    height: 24px;
     color: white;
-    border-color: white;
-    border-style: solid;
+    border-color: grey;
+    border-style: solid solid none;
     border-width: 1px;
-    
+    text-align: center;
+}
+
+td:first-child {
+    border-right-width: 3px;
+    border-color: white;
+    background-color: #000060;
 }

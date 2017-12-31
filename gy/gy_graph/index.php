@@ -8,7 +8,7 @@ function page_img($sbgy_page) {
 	$page_number = intdiv($sbgy_page - 132, 2) + 76;
     }
     else if($sbgy_page < 342) {
-	$page_number = intdiv($sbgy_page - 235, 2) + 132;
+	$page_number = intdiv($sbgy_page - 234, 2) + 132;
     }
     else if($sbgy_page < 448) {
         $page_number = intdiv($sbgy_page - 342, 2) + 192;
