@@ -28,28 +28,28 @@ include $includes . 'db_connect.php';
 $sql = "SELECT gy_entries.graph AS graph, "
         . "gy_niu.graph AS niu, "
         . "gy_niu.id AS niuid, "
-        . "entry, page, number, "
+        . "entry, gy_entries.page, number, "
         . "gy_finals.yj_page, "
         . "fanqie_1, fanqie_2, tone, "
         . "initial_name, gy_initials.ipa_pan AS initial_ipa_pan, "
-        . "she, hu, deng, gy_finals.ipa_pan AS final_ipa_pan "
+        . "she, gy_finals.hu, deng, gy_finals.ipa_pan AS final_ipa_pan "
         . "FROM gy_entries "
         . "INNER JOIN gy_niu ON niu_id = gy_niu.id "
         . "INNER JOIN  gy_initials ON initial_id = gy_initials.id "
-        . "INNER JOIN gy_finals ON final_id=gy_finals.id ";
-
+        . "INNER JOIN gy_finals ON final_id=gy_finals.id "
+        . "INNER JOIN yj_pages ON yj_page=yj_pages.page ";
 if(is_null($id)) {
-    $sql .= "WHERE gy_entries.graph = :graph;";
+    $sql .= "WHERE gy_entries.graph = :graph1 "
+          . "OR gy_entries.alternate_graph = :graph2;";
 }
 else {
     $sql .= "WHERE gy_entries.id = :id;";
 }
-
-        
 try {
     $s = $pdo->prepare($sql);
     if(is_null($id)) {
-        $s->bindvalue("graph", $search_graph);
+        $s->bindvalue("graph1", $search_graph);
+        $s->bindvalue("graph2", $search_graph);
     }
     else {
         $s->bindvalue("id", $id);
@@ -62,7 +62,6 @@ catch (Exception $ex) {
     exit();
 }
 $result = $s->fetchAll(PDO::FETCH_ASSOC);
-
 $row_number = 0;
 foreach($result as $row) {
     $sql = "SELECT rhyme_name "
