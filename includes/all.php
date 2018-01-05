@@ -7,6 +7,11 @@
 error_reporting(E_ALL);
 ini_set( 'display_errors','1');
 
+// cache control
+  $days = 1;
+  $secs = $days * 24 * 60 * 60;
+  header("Cache-Control: max-age=$secs"); //30days (60sec * 60min * 24hours * 30days)
+
 //ZOTERO getZot 
 //$from = 'keys' or 'tags', $keysOrTags is an array
 //returns full html bibliography, and coins data.
