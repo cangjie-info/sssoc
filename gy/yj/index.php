@@ -20,21 +20,28 @@ function arab2cjk($n) {
     return $cjk;
 }
 
-$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING);
+$edition = filter_input(INPUT_GET, 'edition', FILTER_SANITIZE_STRING);
+if($edition == NULL) {
+    $edition = "jzyj";
+}
+
+$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
 if($page == NULL) {
-    $page = "1";
+    $page = 1;
 }
-if(intval($page) < 1) {
-    $page = "1";
+
+if($page < 1) {
+    $page = 1;
 }
-if(intval($page) > 43) {
-    $page = "43";
+if($page > 43) {
+    $page = 43;
 }
 
 include '../../includes/all.php';
 include $includes . 'db_connect.php';
 
 $sql = "SELECT gy_finals.hu AS hu, yj_pages.hu AS yj_hu, deng, "
+        . " gy_rhymes.rhyme_name, "
         . "yj_pages.she AS she, final_name, gy_initials.id AS initial, "
         . "yj_pages.zhuan AS zhuan, yj_qu_as_ru, chongniu, "
         . "gy_niu.graph AS graph, gy_niu.tone, yj_col, "
@@ -43,6 +50,7 @@ $sql = "SELECT gy_finals.hu AS hu, yj_pages.hu AS yj_hu, deng, "
         . "JOIN gy_niu ON final_id = gy_finals.id "
         . "JOIN gy_initials ON initial_id = gy_initials.id "
         . "JOIN yj_pages ON yj_pages.page = gy_finals.yj_page "
+        . "JOIN gy_rhymes ON gy_niu.rhyme_id = gy_rhymes.id "
         . "WHERE gy_finals.yj_page = :page ;";
 try {
     $s = $pdo->prepare($sql);
@@ -85,12 +93,12 @@ foreach($result as $niu) {
     }
     $yj_array[$row][$col][0] .= $niu['graph'];
     $yj_array[$row][$col][1] = $niu['niuid'];
-    $yj_array[$row][0][0] = $niu['final_name'] . $niu['hu'] . $deng;
+    $yj_array[$row][0][0] = $niu['rhyme_name'];
 }
 $she = $result[0]['she'];
 $hu = $result[0]['yj_hu'];
 $zhuan = $result[0]['zhuan'];
-$cjk_page = arab2cjk(intval($page));
+$cjk_page = arab2cjk($page);
 $html_table = '<table>'
     . ' <tr><th colspan="1" rowspan = "2">' . $she . '</th>'
     . ' <th colspan="2">舌齒音</th>'
@@ -137,6 +145,19 @@ for($r = 0; $r < 16; $r++) {
     $html_table .= '</tr>';
 }
 $html_table .= '</table>';
-$img_file = 'yj/yj' . (intval($page) + 11) . '.jpg';
+
+// match database yj zhuan 轉 numbers to page images
+// qyl has a different order 
+$page_offset = ['yj' => 11, 'jzyj' => 13, 'qyl' => -1];
+if($edition == 'qyl') {
+    if($page >= 31 && $page <= 38) {
+        $page_offset['qyl'] += 3;
+    }
+    if($page >= 39 && $page <= 41) {
+        $page_offset['qyl'] -= 8;
+    }
+}
+$padded_page = str_pad($page + $page_offset[$edition], 2, '0', STR_PAD_LEFT);
+$img_file = $edition . '/' . $edition . $padded_page . '.jpg';
 include 'yj.html.php';
 ?>
