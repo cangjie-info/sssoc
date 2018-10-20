@@ -23,7 +23,7 @@ function join_initial_final($initial, $final, $tone = 1, $chongniu = 1) {
     $mc = $initial;
     
     // remove j from final if initial ends in y.
-    if (substr($initial, -1) == 'y' && substr($final, 1) == 'j') {
+    if (strpos($initial, 'y') !== FALSE && substr($final, 0, 1) == 'j') {
         $final = substr($final, 1);
     }
     
