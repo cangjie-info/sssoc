@@ -2,7 +2,7 @@
 
 function is_acute($initial) {
     // labials (p, b, m), velars (k, g, ng), and laryngeals (', h, x) are not acute.
-    if (preg_match("/^p|b|m|k|g|ng|'|h|x/", $initial) == 1) {
+    if (preg_match("/^(p|b|m|k|g|ng|'|h|x)/", $initial) === 1) {
         return false;
     }
     return true;
