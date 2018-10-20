@@ -27,6 +27,15 @@ function join_initial_final($initial, $final, $tone = 1, $chongniu = 1) {
         $final = substr($final, 1);
     }
     
+    // merge chongniu finals when initial not grave
+    // jie > je, jwie > jwe, ji > i, jwi > wi (transform in that order)
+    if (is_acute($initial) && ($chongniu == 3 || $chongniu == 4)) {
+        $chongniu = 0;
+        $patterns = array('/jie/', '/jwie/', 'ji', 'jwi');
+        $replacements = array('je', 'jwe', 'i', 'wi');
+        $final = preg_replace($patterns, $replacements, $final);
+    } 
+    
     $mc .= $final;
     
     // add tone
