@@ -1,5 +1,7 @@
 <?php
 
+require "../../includes/baxter.php";
+
 function arab2cjk($n) {
     if($n > 99 || $n < 1) {
         return "##";
@@ -45,7 +47,9 @@ $sql = "SELECT gy_finals.hu AS hu, yj_pages.hu AS yj_hu, deng, "
         . "yj_pages.she AS she, final_name, gy_initials.id AS initial, "
         . "yj_pages.zhuan AS zhuan, yj_qu_as_ru, chongniu, "
         . "gy_niu.graph AS graph, gy_niu.tone, yj_col, "
-        . "gy_niu.id AS niuid "
+        . "gy_niu.id AS niuid, "
+        . "gy_finals.baxter_mc AS baxter_final, "
+        . "gy_initials.baxter_mc AS baxter_initial "
         . "FROM gy_finals "
         . "JOIN gy_niu ON final_id = gy_finals.id "
         . "JOIN gy_initials ON initial_id = gy_initials.id "
@@ -63,7 +67,7 @@ catch (Exception $ex) {
     exit();
 }
 $result = $s->fetchAll(PDO::FETCH_ASSOC);
-$yj_array = array_fill(0, 16, array_fill(0, 24, array_fill(0, 2, '')));
+$yj_array = array_fill(0, 16, array_fill(0, 24, array_fill(0, 3, '')));
 foreach($result as $niu) {
     $col = 24 - $niu['yj_col']; // initial uniquely determines column
     $row = $niu['deng'] - 1;    // table row is basically determined by the deng of the final
@@ -93,6 +97,8 @@ foreach($result as $niu) {
     }
     $yj_array[$row][$col][0] .= $niu['graph'];
     $yj_array[$row][$col][1] = $niu['niuid'];
+    $baxter = prettify(join_initial_final($niu['baxter_initial'], $niu['baxter_final'], $niu['tone'], $niu['chongniu']));
+    $yj_array[$row][$col][2] = $baxter;
     $yj_array[$row][0][0] = $niu['rhyme_name'];
 }
 $she = $result[0]['she'];
@@ -138,7 +144,8 @@ $html_table .= '<tr title="ny"><th>清濁</th>'
 for($r = 0; $r < 16; $r++) {
     $html_table .= '<tr>';
     for($c = 0; $c < 24; $c++) {
-        $html_table .= '<td><a href="../gy_niu/?id=' . $yj_array[$r][$c][1] 
+        $html_table .= '<td title="' . $yj_array[$r][$c][2] . '">'
+                . '<a href="../gy_niu/?id=' . $yj_array[$r][$c][1] 
                 . '">'
                 . $yj_array[$r][$c][0] . '</a></td>';
     }
