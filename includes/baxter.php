@@ -22,11 +22,6 @@ function join_initial_final($initial, $final, $tone = 1, $chongniu = 1) {
     
     $mc = $initial;
     
-    // remove j from final if initial ends in y.
-    if (strpos($initial, 'y') !== FALSE && substr($final, 0, 1) == 'j') {
-        $final = substr($final, 1);
-    }
-    
     // merge chongniu finals when initial not grave
     // jie > je, jwie > jwe, ji > i, jwi > wi (transform in that order)
     if (is_acute($initial) && ($chongniu == 3 || $chongniu == 4)) {
@@ -35,6 +30,11 @@ function join_initial_final($initial, $final, $tone = 1, $chongniu = 1) {
         $replacements = array('je', 'jwe', 'i', 'wi');
         $final = preg_replace($patterns, $replacements, $final);
     } 
+    
+    // remove j from final if initial ends in y.
+    if (strpos($initial, 'y') !== FALSE && substr($final, 0, 1) == 'j') {
+        $final = substr($final, 1);
+    }
     
     $mc .= $final;
     
